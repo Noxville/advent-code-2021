@@ -13,6 +13,7 @@ class Fish:
     def __repr__(self):
         return str(self.countdown)
 
+
 with open('case1.txt') as fin:
     fish = [Fish(int(e.strip()), 6) for e in fin.readline().split(",")]
 
@@ -22,7 +23,4 @@ with open('case1.txt') as fin:
         ng = [_ for _ in ng if _ is not None]
         fish.extend(ng)
         row = ",".join([str(_) for _ in fish])
-        #print(f"Day {1 + i}: {row}")
         print(f"Day {1 + i}: {len(fish)}")
-
-

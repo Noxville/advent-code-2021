@@ -20,12 +20,13 @@ class Rule:
             dy = delta_y if (self.x2 == smaller_x) else -delta_y
             dydx = dy // abs(delta_x)
             starting_y = self.y1 if (self.x1 == smaller_x) else self.y2
-            #print(f"Smaller x = {smaller_x} / dy = {dy}, dydx = {dydx}, starting y = {starting_y}")
-            return [(_x, starting_y + (i*dydx)) for i, _x in enumerate(range(smaller_x, 1 + max(self.x1, self.x2)))]
+            # print(f"Smaller x = {smaller_x} / dy = {dy}, dydx = {dydx}, starting y = {starting_y}")
+            return [(_x, starting_y + (i * dydx)) for i, _x in enumerate(range(smaller_x, 1 + max(self.x1, self.x2)))]
         elif abs(delta_x):
             return [(_, self.y1) for _ in range(min(self.x1, self.x2), 1 + max(self.x1, self.x2))]
         elif abs(delta_y):
             return [(self.x1, _) for _ in range(min(self.y1, self.y2), 1 + max(self.y1, self.y2))]
+
 
 with open('case1.txt') as fin:
     rules = [Rule(e.strip()) for e in fin.readlines()]
@@ -43,4 +44,3 @@ with open('case1.txt') as fin:
             if grid[x][y] >= 2:
                 overlaps += 1
     print(overlaps)
-
