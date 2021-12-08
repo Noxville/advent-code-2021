@@ -1,26 +1,39 @@
-class Fish:
-    def __init__(self, countdown, child):
-        self.countdown = countdown
-        self.child = child
+class Rule:
+    def __init__(self, raw):
+        sp = [_.split(",") for _ in raw.replace(" -> ", "|").split("|")]
+        self.x1, self.y1, self.x2, self.y2 = int(sp[0][0]), int(sp[0][1]), int(sp[1][0]), int(sp[1][1])
 
-    def next(self):
-        self.countdown -= 1
-        if self.countdown == -1:
-            self.countdown = 6
-            return Fish(2 + self.child, self.countdown)
-        return None
+    def max_x(self):
+        return self.x1 if self.x1 > self.x2 else self.x2
 
-    def __repr__(self):
-        return str(self.countdown)
+    def max_y(self):
+        return self.y1 if self.y1 > self.y2 else self.y2
+
+    def covers(self):
+        delta_x = abs(self.x1 - self.x2)
+        delta_y = abs(self.y1 - self.y2)
+        if delta_x and delta_y:
+            return []
+        elif delta_x:
+            return [(_, self.y1) for _ in range(min(self.x1, self.x2), 1 + max(self.x1, self.x2))]
+        elif delta_y:
+            return [(self.x1, _) for _ in range(min(self.y1, self.y2), 1 + max(self.y1, self.y2))]
 
 
 with open('case1.txt') as fin:
-    fish = [Fish(int(e.strip()), 6) for e in fin.readline().split(",")]
+    rules = [Rule(e.strip()) for e in fin.readlines()]
 
-    print(fish)
-    for i in range(256):
-        ng = [f.next() for f in fish]
-        ng = [_ for _ in ng if _ is not None]
-        fish.extend(ng)
-        row = ",".join([str(_) for _ in fish])
-        print(f"Day {1 + i}: {len(fish)}")
+    X, Y = 1 + max([_.max_x() for _ in rules]), 1 + max([_.max_y() for _ in rules])
+
+    grid = [[0 for i in range(X)] for j in range(Y)]
+    for r in rules:
+        for cell in r.covers():
+            grid[cell[1]][cell[0]] += 1
+
+    overlaps = 0
+    for x in range(X):
+        for y in range(Y):
+            if grid[x][y] >= 2:
+                overlaps += 1
+    print(overlaps)
+

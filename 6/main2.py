@@ -1,8 +1,19 @@
 with open('case1.txt') as fin:
-    heights = sorted([int(e.strip()) for e in fin.readline().split(",")])
-    best_pos, best_val = None, None
-    for pos in range(min(heights), 1 + max(heights)):
-        v = sum([(abs(h - pos) * (1 + abs(h - pos))) // 2 for h in heights])
-        if best_pos is None or v < best_val:
-            best_pos, best_val = pos, v
-    print(best_val)
+    fish = [int(e.strip()) for e in fin.readline().split(",")]
+    fc = {}
+    for f in fish:
+        fc[f] = 1 + fc.get(f, 0)
+
+    print(fc)
+    for i in range(256):
+        ng = {}
+        spawn = 0
+        for left, c in fc.items():
+            if left == 0:
+                spawn = c
+                ng[6] = c
+            else:
+                ng[left - 1] = ng.get(left - 1, 0) + c
+        ng[8] = spawn
+        fc = ng
+        print(f"Day {1 + i}: {sum(fc.values())}")

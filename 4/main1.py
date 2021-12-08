@@ -1,39 +1,42 @@
-class Rule:
-    def __init__(self, raw):
-        sp = [_.split(",") for _ in raw.replace(" -> ", "|").split("|")]
-        self.x1, self.y1, self.x2, self.y2 = int(sp[0][0]), int(sp[0][1]), int(sp[1][0]), int(sp[1][1])
+import sys
 
-    def max_x(self):
-        return self.x1 if self.x1 > self.x2 else self.x2
 
-    def max_y(self):
-        return self.y1 if self.y1 > self.y2 else self.y2
+class Grid:
+    def __init__(self, lines):
+        self.data = [[int(_) for _ in line.replace("  ", " ").split(" ")] for line in lines]
 
-    def covers(self):
-        delta_x = abs(self.x1 - self.x2)
-        delta_y = abs(self.y1 - self.y2)
-        if delta_x and delta_y:
-            return []
-        elif delta_x:
-            return [(_, self.y1) for _ in range(min(self.x1, self.x2), 1 + max(self.x1, self.x2))]
-        elif delta_y:
-            return [(self.x1, _) for _ in range(min(self.y1, self.y2), 1 + max(self.y1, self.y2))]
+    def won(self):
+        for r in range(5):
+            if max(self.data[r]) == -1:
+                return True
+        for c in range(5):
+            if max([_[c] for _ in self.data]) == -1:
+                return True
+        return False
+
+    def remove(self, v):
+        for r in range(5):
+            for c in range(5):
+                if self.data[r][c] == v:
+                    self.data[r][c] = -1
+
+    def unmarked(self):
+        tot = 0
+        for r in range(5):
+            for c in range(5):
+                tot += max(0, self.data[r][c])
+        return tot
 
 
 with open('case1.txt') as fin:
-    rules = [Rule(e.strip()) for e in fin.readlines()]
+    ls = [e.strip() for e in fin.readlines()]
+    nums = map(int, ls[0].split(","))
+    grids = [Grid(ls[2 + (6 * i): (6 * i) + 7]) for i in range((len(ls) - 1) // 6)]
 
-    X, Y = 1 + max([_.max_x() for _ in rules]), 1 + max([_.max_y() for _ in rules])
-
-    grid = [[0 for i in range(X)] for j in range(Y)]
-    for r in rules:
-        for cell in r.covers():
-            grid[cell[1]][cell[0]] += 1
-
-    overlaps = 0
-    for x in range(X):
-        for y in range(Y):
-            if grid[x][y] >= 2:
-                overlaps += 1
-    print(overlaps)
-
+    for n in nums:
+        print(f"n-> {n}")
+        for g in grids:
+            g.remove(n)
+            if g.won():
+                print(g.unmarked() * n)
+                sys.exit(0)
