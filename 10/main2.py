@@ -20,8 +20,6 @@ with open('case1.txt') as fin:
         s = solve(line)
         if type(s) != int:
             for c in s:
-                cur_score *= 5
-                cur_score += penalties[c]
+                cur_score = (cur_score  * 5 ) + penalties[c]
             scores.append(cur_score)
     print(sorted(scores)[len(scores)//2])
-
