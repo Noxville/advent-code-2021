@@ -25,6 +25,7 @@ def valid_x(xrnge):
             if dx == 0:
                 break
             dx = max(0, dx - 1) if dx >= 0 else min(0, dx + 1)
+            steps += 1
     return valid
 
 

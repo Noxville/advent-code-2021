@@ -4,6 +4,7 @@ def solve(tx, ty):
     best, bx, by = - (10**6), None, None
     vx = valid_x(tx)
     vy = valid_y(ty)
+    print(f"valid x = {vx}\nvalid y = {vy}")
     print(f"Brute force perms: {len(vx) * len(vy)}")
     for dx in vx:
         for dy in vy:
@@ -24,6 +25,7 @@ def valid_x(xrnge):
             if dx == 0:
                 break
             dx = max(0, dx - 1) if dx >= 0 else min(0, dx + 1)
+            steps += 1
     return valid
 
 
@@ -63,7 +65,7 @@ def attempt(dx, dy, tx, ty):
         return None
 
 
-with open('case1.txt') as fin:
+with open('test1.in') as fin:
     lines = [e.strip() for e in fin.readlines()]
     for lin in lines:
         sp = lin.replace("target area: ", "").replace(", ", ",").replace("x=", "").replace("y=", "").split(",")
